@@ -1,0 +1,13 @@
+services:
+  nginx-proxy:
+    build: ${PWD}/nginx
+    ports:
+      - "80:80"
+    healthcheck:
+      test: curl --fail http://localhost || exit 1
+      interval: 60s
+      retries: 5
+      start_period: 20s
+      timeout: 10s
+  express:
+    build: ${PWD}/express
