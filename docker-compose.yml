@@ -15,13 +15,55 @@ services:
       retries: 5
       start_period: 20s
       timeout: 10s
+
   certbot:
     image: certbot/certbot
     container_name: certbot
     volumes:
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
-    command: certonly --webroot -w /var/www/certbot --email me@evynprice.com -d evyn.me --agree-tos --renew-by-default
+    command: certonly --webroot -w /var/www/certbot --email ${CERTBOT_EMAIL} -d ${CERTBOT_DOMAIN} --agree-tos --renew-by-default
+  
   express:
     build: ${PWD}/express
     container_name: express
+
+  influxdb:
+    image: influxdb:1.8-alpine
+    container_name: influxdb
+    restart: always
+    ports:
+      - "8086:8086"
+    volumes:
+      - ./influxdb:/var/lib/influxdb
+    environment:
+      - INFLUXDB_DB={INFLUX_DB}
+      - INFLUXDB_ADMIN_USER={INFLUX_ADMIN}
+      - INFLUXDB_ADMIN_PASSWORD={INFLUX_PASS}
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana
+    links:
+      - influxdb
+    restart: always
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SERVER_DOMAIN=evyn.me
+      - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s:%(http_port)s/grafana/
+      - GF_SERVER_SERVE_FROM_SUB_PATH=true
+
+  telegraf:
+    image: telegraf
+    container_name: telegraf
+    restart: always
+    volumes:
+      - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    depends_on:
+      - influxdb
+    links:
+      - influxdb
+
+volumes:
+  grafana_data: {}
