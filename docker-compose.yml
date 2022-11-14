@@ -37,9 +37,9 @@ services:
     volumes:
       - ./influxdb:/var/lib/influxdb
     environment:
-      - INFLUXDB_DB={INFLUX_DB}
-      - INFLUXDB_ADMIN_USER={INFLUX_ADMIN}
-      - INFLUXDB_ADMIN_PASSWORD={INFLUX_PASS}
+      - INFLUXDB_DB=${INFLUX_DB}
+      - INFLUXDB_ADMIN_USER=${INFLUX_ADMIN}
+      - INFLUXDB_ADMIN_PASSWORD=${INFLUX_PASS}
 
   grafana:
     container_name: grafana
@@ -51,8 +51,15 @@ services:
       - grafana_data:/var/lib/grafana
     environment:
       - GF_SERVER_DOMAIN=evyn.me
-      - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s:%(http_port)s/grafana/
+      - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s/grafana/
       - GF_SERVER_SERVE_FROM_SUB_PATH=true
+      - GF_SMTP_ENABLED=true
+      - GF_SMTP_HOST=${SMTP_HOST}
+      - GF_SMTP_USER=${SMTP_USER}
+      - GF_SMTP_PASSWORD=${SMTP_PASSWORD}
+      - GF_SMTP_SKIP_VERIFY=false
+      - GF_SMTP_FROM_ADDRESS=${SMTP_FROM_ADDRESS}
+      - GF_SMTP_FROM_NAME=${SMTP_FROM_NAME}
 
   telegraf:
     image: telegraf

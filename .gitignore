@@ -3,4 +3,4 @@ express/node_modules
 express/package-lock.json
 certbot/
 influxdb/
-./telegraph.conf
+telegraph.conf
