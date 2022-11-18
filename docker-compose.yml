@@ -1,7 +1,7 @@
 version: '3'
 services:
   nginx:
-    build: ${PWD}/nginx
+    build: ./nginx
     container_name: nginx
     restart: unless-stopped
     ports:
@@ -29,7 +29,7 @@ services:
     command: certonly --webroot -w /var/www/certbot --email ${CERTBOT_EMAIL} -d ${CERTBOT_DOMAIN} -d ${CERTBOT_DOMAIN2} --agree-tos --renew-by-default
   
   express:
-    build: ${PWD}/express
+    build: ./express
     container_name: express
     restart: unless-stopped
 
