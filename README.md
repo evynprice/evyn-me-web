@@ -6,6 +6,7 @@ This repository contains the files needed to run my web services.
 | Nginx         | Reverse Proxy and root webserver  |
 | Certbot       | SSL Certificates                  |
 | Express       | API endpoint                      |
+| Uptime-kuma   | Uptime Monitoring                 |
 | Grafana       | Metrics Dashboard                 |
 | Prometheus    | Time series Metrics DB            |
 
@@ -13,6 +14,9 @@ This repository contains the files needed to run my web services.
 
 ### Nginx
 [Nginx](https://hub.docker.com/_/nginx) is used as a reverse proxy for the web stack. It routes clients to the specific services based on the subdirectory and serves static files.
+
+### Uptime Kuma
+[Uptime Kuma](https://github.com/louislam/uptime-kuma) hosts https://status.evyn.me , a status page for all of my services.
 
 ### Grafana
 [Grafana](https://hub.docker.com/r/grafana/grafana/) hosts a dashboard for metrics and logging visualization. This provides visibility on the overall health and status of each of the services in my lab. It depends on Prometheus for metrics collection and storage. Mail delivery is sent through [SendGrid](https://sendgrid.com).
