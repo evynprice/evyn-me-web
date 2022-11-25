@@ -3,3 +3,5 @@ express/node_modules
 express/package-lock.json
 certbot/
 uptime-kuma/
+ghost/
+mariadb/

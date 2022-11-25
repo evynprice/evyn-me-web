@@ -33,6 +33,22 @@ services:
     container_name: express
     restart: unless-stopped
 
+  ghost:
+    image: ghost:latest
+    container_name: ghost
+    restart: unless-stopped
+    environment:
+      - url=http://evyn.me/blog
+      - database__client=mysql
+      - database__connection__host=mariadb
+      - database__connection__database=ghost_production
+      - database__connection__user=ghost
+      - database__connection__password=${DB_PASSWORD}
+    depends_on:
+      - mariadb
+    volumes:
+      - ./ghost:/var/lib/ghost/content
+
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
@@ -73,6 +89,18 @@ services:
     volumes:
       - ./uptime-kuma:/app/data
       - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT}
+      - MYSQL_USER=ghost
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=ghost_production
+    volumes:
+      - ./mariadb:/var/lib/mysql
 
 volumes:
   prometheus_data: {}
