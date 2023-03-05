@@ -8,8 +8,9 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
+      - ./nginx/conf/:/etc/nginx/conf.d/:ro
+      - ./certbot/www:/var/www/certbot/:rw
+      - ./certbot/conf/:/etc/nginx/ssl/:ro
     links:
       - express
       - grafana
@@ -24,9 +25,9 @@ services:
     image: certbot/certbot
     container_name: certbot
     volumes:
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
-    command: certonly --webroot -w /var/www/certbot --email ${CERTBOT_EMAIL} -d ${CERTBOT_DOMAIN} -d ${CERTBOT_DOMAIN2} --agree-tos --renew-by-default
+      - ./certbot/www/:/var/www/certbot/:rw
+      - ./certbot/conf/:/etc/letsencrypt/:rw
+    command: certonly --webroot --webroot-path /var/www/certbot/ -d ${CERTBOT_DOMAIN} -d ${CERTBOT_DOMAIN2} --agree-tos --email ${CERTBOT_EMAIL} --renew-by-default
   
   express:
     build: ./express
